@@ -26,7 +26,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::group(['middleware' => ['role:admin']], function () {
+Route::group(['middleware' => ['role:admin|user']], function () {
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');

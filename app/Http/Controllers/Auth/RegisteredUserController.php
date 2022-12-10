@@ -49,6 +49,9 @@ class RegisteredUserController extends Controller
         if ($user->email == "admin@test.com") {
 
             $user->assignRole('admin');
+        } else {
+
+            $user->assignRole('user');
         }
 
         event(new Registered($user));
