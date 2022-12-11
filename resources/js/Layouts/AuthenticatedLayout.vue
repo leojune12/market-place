@@ -11,8 +11,8 @@
                 <div class="flex flex-col px-3 gap-1">
                     <Link
                         v-for="item in navigation"
-                        href="#"
-                        :class="[item.current ? 'bg-blue-500 hover:bg-blue-500' : '', 'px-3 py-2 rounded-md flex items-center hover:bg-slate-700']"
+                        :href="item.href"
+                        :class="[$page.url.startsWith(item.href) ? 'hover:bg-blue-500 bg-blue-500' : 'hover:bg-slate-700', 'px-3 py-2 rounded-md flex items-center']"
                     >
                         <component
                             :is="item.icon"
@@ -44,9 +44,6 @@
                                 <!-- <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" /> -->
                                 </div>
                                 <div class="hidden md:ml-6 md:block">
-                                <!-- <div class="flex space-x-4">
-                                    <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
-                                </div> -->
                                 </div>
                             </div>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0">
@@ -114,44 +111,37 @@
     const navigation = [
         {
             name: 'Users',
-            href: '#',
-            current: true,
+            href: '/users',
             icon: UsersIcon,
         },
         {
             name: 'Categories',
-            href: '#',
-            current: false,
+            href: '/categories',
             icon: TagIcon,
         },
         {
             name: 'Businesses',
-            href: '#',
-            current: false,
+            href: '/businesses',
             icon: BuildingOfficeIcon,
         },
         {
             name: 'Products',
-            href: '#',
-            current: false,
+            href: '/products',
             icon: ShoppingBagIcon,
         },
         {
             name: 'Services',
-            href: '#',
-            current: false,
+            href: '/services',
             icon: WrenchScrewdriverIcon,
         },
         {
             name: 'Jobs',
-            href: '#',
-            current: false,
+            href: 'jobs',
             icon: BriefcaseIcon,
         },
         {
-            name: 'Profile',
-            href: '#',
-            current: false,
+            name: 'Profile Settings',
+            href: '/profile',
             icon: UserCircleIcon,
         },
     ]
