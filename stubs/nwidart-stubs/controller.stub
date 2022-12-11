@@ -5,6 +5,7 @@ namespace $CLASS_NAMESPACE$;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Inertia\Inertia;
 
 class $CLASS$ extends Controller
 {
@@ -14,7 +15,9 @@ class $CLASS$ extends Controller
      */
     public function index()
     {
-        return view('$LOWER_NAME$::index');
+        return Inertia::render('$MODULE$/Index', [
+            // '' => ,
+        ]);
     }
 
     /**
@@ -23,7 +26,9 @@ class $CLASS$ extends Controller
      */
     public function create()
     {
-        return view('$LOWER_NAME$::create');
+        return Inertia::render('$MODULE$/Create', [
+            // '' => ,
+        ]);
     }
 
     /**
@@ -43,7 +48,9 @@ class $CLASS$ extends Controller
      */
     public function show($id)
     {
-        return view('$LOWER_NAME$::show');
+        return Inertia::render('$MODULE$/Show', [
+            // '' => ,
+        ]);
     }
 
     /**
@@ -53,7 +60,9 @@ class $CLASS$ extends Controller
      */
     public function edit($id)
     {
-        return view('$LOWER_NAME$::edit');
+        return Inertia::render('$MODULE$/Edit', [
+            // '' => ,
+        ]);
     }
 
     /**
