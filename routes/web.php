@@ -26,11 +26,21 @@ Route::get('/', function () {
     ]);
 });
 
-Route::group(['middleware' => ['role:admin|user']], function () {
+Route::group(['middleware' => ['auth', 'verified', 'role:admin|user']], function () {
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    })->name('dashboard');
+
+    Route::get('/test', function () {
+
+        return Inertia::render('Test', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    });
 });
 
 Route::middleware('auth')->group(function () {
