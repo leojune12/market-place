@@ -2,10 +2,11 @@
 
 namespace Modules\User\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Support\Renderable;
 
 class UserController extends Controller
 {
@@ -13,11 +14,31 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('User/Index', [
-            // '' => ,
+            'response' => $this->getData($request),
         ]);
+    }
+
+    private function getData($request)
+    {
+        $query = DB::table('users');
+
+        $query->whereNull('deleted_at');
+
+        $query->orderBy($request->orderBy ?? 'id', $request->orderType ?? 'DESC');
+
+        $query->select(
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+        );
+
+        // $this->queryHandler($query, $request);
+
+        return $query->paginate($request->perPage ?? 10);
     }
 
     /**
