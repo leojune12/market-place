@@ -51,9 +51,6 @@ class CreatePermissionTables extends Migration
             }
         });
 
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'user']);
-
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames, $teams) {
             $table->unsignedBigInteger(PermissionRegistrar::$pivotPermission);
 
