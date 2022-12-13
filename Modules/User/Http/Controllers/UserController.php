@@ -16,10 +16,6 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function index(Request $request)
     {
         return Inertia::render('User/Index', [
@@ -51,10 +47,6 @@ class UserController extends Controller
         return $query->paginate($request->perPage ?? 10);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
     public function create()
     {
         return Inertia::render('User/Create', [
@@ -72,11 +64,6 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function show(User $user)
     {
         $user->load('roles:id,name');
@@ -87,11 +74,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function edit(User $user)
     {
         $user->load('roles:id,name');
@@ -146,13 +128,25 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        if(!empty($request->id_array)) {
+
+            DB::beginTransaction();
+
+            try {
+
+                User::destroy($request->id_array);
+
+                DB::commit();
+
+                return back();
+            } catch (Throwable $e) {
+
+                DB::rollBack();
+
+                return back();
+            }
+        }
     }
 }

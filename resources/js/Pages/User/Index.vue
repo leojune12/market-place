@@ -63,13 +63,14 @@
                                 >
                                     <PencilSquareIcon class="block h-5 w-5" aria-hidden="true" />
                                 </Link>
-                                <Link
+                                <a
                                     href="#"
                                     class="text-red-500 hover:text-red-600 transition duration-300 ease-in-out"
                                     title="Delete"
+                                    @click="confirmDelete(item.id)"
                                 >
                                     <TrashIcon class="block h-5 w-5" aria-hidden="true" />
-                                </Link>
+                                </a>
                             </div>
                         </td>
                     </tr>
@@ -88,27 +89,66 @@
     </AuthenticatedLayout>
 </template>
 
-<script>
+<script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
     import PaginationComponent from '@/Components/Table/Pagination.vue'
     import { Head, Link } from '@inertiajs/inertia-vue3'
-    import { EyeIcon, PencilSquareIcon, TrashIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
+    import { EyeIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+    import Swal from 'sweetalert2'
+    import { useForm } from '@inertiajs/inertia-vue3'
 
-    export default {
-        components: {
-            AuthenticatedLayout,
-            PaginationComponent,
-            Head,
-            Link,
-            EyeIcon,
-            PencilSquareIcon,
-            TrashIcon,
-            ChevronLeftIcon,
-            ChevronRightIcon,
-        },
-        props: {
-            response: Object,
-        },
+    defineProps({
+        response: Object,
+    })
+
+    const form = useForm({
+        id_array: [],
+    })
+
+    function confirmDelete(id) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Delete'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.deleteItem(id)
+            }
+        })
+    }
+
+    function deleteItem(id) {
+
+        let id_array = Array.isArray(id)
+                    ? Object.keys(id).map(index => id[index].id)
+                    : [id]
+
+        form.transform(() => ({
+                id_array: id_array,
+            }))
+            .delete(
+            route('users.destroy', id),
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    Swal.fire({
+                        title: 'Success',
+                        text: "Deleted successfully.",
+                        icon: 'success',
+                        confirmButtonColor: '#16a34a',
+                    }).then(() => {
+                        // Inertia.reload({ only: ['response'] })
+                    })
+                },
+                onError: (error) => {
+                    // console.log(error)
+                },
+            }
+        )
     }
 
 </script>
