@@ -77,11 +77,11 @@
 
                     <DisclosurePanel class="md:hidden">
                         <div class="space-y-1 px-2 pt-2 pb-3">
-                            <DisclosureButton
+                            <Link
                                 v-for="item in navigation"
                                 :key="item.name" as="a"
                                 :href="item.href"
-                                :class="[item.current ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-50', 'px-3 py-2 rounded-md text-base font-medium flex items-center']"
+                                :class="[$page.url.startsWith(item.href) ? 'bg-blue-500 text-white' : 'text-gray-700 hover:bg-blue-50', 'px-3 py-2 rounded-md text-base font-medium flex items-center']"
                                 :aria-current="item.current ? 'page' : undefined"
                             >
                                 <component
@@ -90,12 +90,12 @@
                                     aria-hidden="true"
                                 />
                                 {{ item.name }}
-                            </DisclosureButton>
+                            </Link>
                         </div>
                     </DisclosurePanel>
                 </Disclosure>
 
-                <main>
+                <main class="px-4 sm:px-6 lg:px-12 py-10">
                     <slot />
                 </main>
             </div>
