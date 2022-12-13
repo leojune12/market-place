@@ -2,11 +2,17 @@
 
 namespace Modules\User\Http\Controllers;
 
+use Throwable;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Services\DateService;
+use Illuminate\Validation\Rule;
+use Modules\User\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Support\Renderable;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -25,15 +31,19 @@ class UserController extends Controller
     {
         $query = DB::table('users');
 
-        $query->whereNull('deleted_at');
+        $query->whereNull('users.deleted_at');
 
         $query->orderBy($request->orderBy ?? 'id', $request->orderType ?? 'DESC');
 
+        $query->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id');
+        $query->join('roles', 'roles.id', '=', 'model_has_roles.role_id');
+
         $query->select(
-            'id',
-            'first_name',
-            'last_name',
-            'email',
+            'users.id',
+            'users.first_name',
+            'users.last_name',
+            'users.email',
+            'roles.name as role_name',
         );
 
         // $this->queryHandler($query, $request);
@@ -67,10 +77,13 @@ class UserController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(User $user)
     {
+        $user->load('roles:id,name');
+        $user['date_added'] = DateService::viewDate($user->created_at);
+
         return Inertia::render('User/Show', [
-            // '' => ,
+            'model' => $user,
         ]);
     }
 
@@ -79,22 +92,58 @@ class UserController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(User $user)
     {
+        $user->load('roles:id,name');
+
+        $roles = Role::select('id', 'name')
+            ->orderBy('id')
+            ->get();
+
         return Inertia::render('User/Edit', [
-            // '' => ,
+            'model' => $user,
+            'roles' => $roles,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user),
+            ],
+            'role' => [
+                'required',
+                'exists:roles,name'
+            ],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $user->update($request->except(['role']));
+
+            $user->syncRoles([$request->role]);
+
+            DB::commit();
+
+            return Redirect::route('users.edit', [
+                'user' => $user->id,
+            ]);
+        } catch (Throwable $e) {
+
+            return $e;
+            DB::rollBack();
+
+            return Redirect::route('users.edit', [
+                'user' => $user->id,
+            ]);
+        }
     }
 
     /**
