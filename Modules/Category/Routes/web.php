@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => ['role:Admin']], function () {
-    Route::resource('$LOWER_NAME$', $STUDLY_NAME$Controller::class);
+    Route::resource('categories', CategoryController::class);
 });
