@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Category\Entities\Category;
 
-class CategoryTableSeeder extends Seeder
+class CategoryDatabaseSeeder extends Seeder
 {
     /**
      * Run the database seeds.
