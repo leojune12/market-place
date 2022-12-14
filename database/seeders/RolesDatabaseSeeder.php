@@ -15,8 +15,8 @@ class RolesDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Role::firstOrCreate(['name' => 'admin']);
-        Role::firstOrCreate(['name' => 'owner']);
-        Role::firstOrCreate(['name' => 'customer']);
+        Role::firstOrCreate(['name' => 'Admin']);
+        Role::firstOrCreate(['name' => 'Owner']);
+        Role::firstOrCreate(['name' => 'Customer']);
     }
 }

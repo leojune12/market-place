@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['role:admin']], function () {
+Route::group(['middleware' => ['role:Admin']], function () {
     Route::resource('users', UserController::class);
 });

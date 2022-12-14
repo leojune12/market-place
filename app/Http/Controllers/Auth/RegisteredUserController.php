@@ -46,14 +46,6 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        if ($user->email == "admin@test.com") {
-
-            $user->assignRole('admin');
-        } else {
-
-            $user->assignRole('user');
-        }
-
         event(new Registered($user));
 
         Auth::login($user);
