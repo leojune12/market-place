@@ -14,17 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('address_city_municipalities', function (Blueprint $table) {
-            Schema::create('address_city_municipalities', function (Blueprint $table) {
-                $table->id();
-                $table->string('psgcCode');
-                $table->bigInteger('regCode');
-                $table->bigInteger('provCode');
-                $table->bigInteger('citymunCode');
-                $table->string('citymunDesc');
-                $table->string('zipCode');
+            $table->id();
+            $table->string('psgcCode');
+            $table->bigInteger('regCode');
+            $table->bigInteger('provCode');
+            $table->bigInteger('citymunCode');
+            $table->string('citymunDesc');
+            $table->string('zipCode');
 
-                $table->timestamps();
-            });
+            $table->timestamps();
         });
     }
 
