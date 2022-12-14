@@ -174,14 +174,11 @@ class UserController extends Controller
             try {
 
                 User::destroy($request->id_array);
-
                 DB::commit();
-
                 return back();
             } catch (Throwable $e) {
 
                 DB::rollBack();
-
                 return back();
             }
         }
