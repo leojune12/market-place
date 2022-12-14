@@ -146,7 +146,6 @@ class UserController extends Controller
         try {
 
             $user->update($request->except(['role']));
-
             $user->syncRoles([$request->role]);
 
             DB::commit();
