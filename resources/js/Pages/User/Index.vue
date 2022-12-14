@@ -2,9 +2,18 @@
     <Head title="User" />
 
     <AuthenticatedLayout>
+        <div class="flex mb-4 justify-end">
+            <LinkComponent
+                :href="url + '/create'"
+                type="success"
+            >
+                <PlusIcon class="block h-5 w-5" aria-hidden="true" />
+                Create
+            </LinkComponent>
+        </div>
         <div class="overflow-x-auto mb-4">
             <table class="min-w-full">
-                <thead class="border bg-slate-600 text-sm font-medium text-white">
+                <thead class="border bg-sky-600 text-sm font-medium text-white">
                     <tr>
                         <th class="py-3 px-6 text-left">
                             ID
@@ -93,9 +102,12 @@
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
     import PaginationComponent from '@/Components/Table/Pagination.vue'
     import { Head, Link } from '@inertiajs/inertia-vue3'
-    import { EyeIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
+    import { EyeIcon, PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/vue/24/outline'
     import Swal from 'sweetalert2'
     import { useForm } from '@inertiajs/inertia-vue3'
+    import LinkComponent from '@/Components/LinkComponent.vue';
+
+    const url = '/users'
 
     defineProps({
         response: Object,

@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <div class="w-72 flex-none md:flex hidden">
-            <div class="w-72 fixed left-0 top-0 min-h-screen flex flex-col bg-slate-800 text-white h-full">
+            <div class="w-72 fixed left-0 top-0 min-h-screen flex flex-col bg-gradient-to-br from-green-900 to-blue-900 text-white h-full">
                 <Link href="/" class="h-16 flex items-center px-6 border-b border-gray-700 mb-5">
                     <img class="block h-8 w-auto mr-2" src="https://tailwindui.com/img/logos/mark.svg?color=white" alt="Your Company" />
                     <div class="text-lg font-semibold">
@@ -12,7 +12,7 @@
                     <Link
                         v-for="item in navigation"
                         :href="item.href"
-                        :class="[$page.url.startsWith(item.href) ? 'hover:bg-blue-500 bg-blue-500' : 'hover:bg-slate-700', 'px-3 py-2 rounded-md flex items-center']"
+                        :class="[$page.url.startsWith(item.href) ? 'hover:bg-white bg-white text-gray-800' : 'hover:bg-gray-400', 'px-3 py-2 rounded-md flex items-center']"
                     >
                         <component
                             :is="item.icon"

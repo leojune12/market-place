@@ -10,9 +10,10 @@ use Illuminate\Validation\Rule;
 use Modules\User\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Contracts\Support\Renderable;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Contracts\Support\Renderable;
 
 class UserController extends Controller
 {
@@ -49,8 +50,12 @@ class UserController extends Controller
 
     public function create()
     {
+        $roles = Role::select('id', 'name')
+            ->orderBy('id')
+            ->get();
+
         return Inertia::render('User/Create', [
-            // '' => ,
+            'roles' => $roles,
         ]);
     }
 
@@ -61,7 +66,39 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users'),
+            ],
+            'password' => ['required', 'confirmed', Password::defaults()],
+            'role' => [
+                'required',
+                'exists:roles,name'
+            ],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $user = User::create($request->except(['role']));
+
+            $user->syncRoles([$request->role]);
+
+            DB::commit();
+
+            return Redirect::route('users.index');
+        } catch (Throwable $e) {
+
+            return $e;
+            DB::rollBack();
+
+            return Redirect::route('users.index');
+        }
     }
 
     public function show(User $user)
