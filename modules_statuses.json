@@ -2,5 +2,6 @@
     "User": true,
     "Category": true,
     "Subcategory": true,
-    "Business": true
+    "Business": true,
+    "Address": true
 }

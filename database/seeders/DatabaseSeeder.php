@@ -18,9 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesDatabaseSeeder::class,
             AdminUserDatabaseSeeder::class,
-            // CategoriesDatabaseSeeder::class,
-            // SubcategoryDatabaseSeeder::class,
-            // AddressDatabaseSeeder::class,
+            CategoriesDatabaseSeeder::class,
+            SubcategoryDatabaseSeeder::class,
+            AddressDatabaseSeeder::class,
             UserDatabaseSeeder::class,
         ]);
     }
