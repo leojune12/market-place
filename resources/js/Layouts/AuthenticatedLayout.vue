@@ -105,7 +105,7 @@
 
 <script setup>
     import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-    import { Bars3Icon, XMarkIcon, UsersIcon, BuildingOfficeIcon, TagIcon, ShoppingBagIcon, WrenchScrewdriverIcon, BriefcaseIcon, UserCircleIcon } from '@heroicons/vue/24/outline'
+    import { Bars3Icon, XMarkIcon, UsersIcon, BuildingStorefrontIcon, TagIcon, ShoppingBagIcon, WrenchScrewdriverIcon, BriefcaseIcon, UserCircleIcon, RectangleStackIcon } from '@heroicons/vue/24/outline'
     import { Link } from '@inertiajs/inertia-vue3';
 
     const navigation = [
@@ -120,9 +120,14 @@
             icon: TagIcon,
         },
         {
+            name: 'Subcategories',
+            href: '/subcategories',
+            icon: RectangleStackIcon,
+        },
+        {
             name: 'Businesses',
             href: '/businesses',
-            icon: BuildingOfficeIcon,
+            icon: BuildingStorefrontIcon,
         },
         {
             name: 'Products',
