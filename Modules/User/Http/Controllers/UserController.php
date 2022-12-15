@@ -11,15 +11,16 @@ use Modules\User\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Contracts\Support\Renderable;
 
 class UserController extends Controller
 {
+    public $module_route = 'users';
+
     public function index(Request $request)
     {
         return Inertia::render('User/Index', [
+            'moduleRoute' => $this->module_route,
             'response' => $this->getData($request),
         ]);
     }
@@ -55,15 +56,11 @@ class UserController extends Controller
             ->get();
 
         return Inertia::render('User/Create', [
+            'moduleRoute' => $this->module_route,
             'roles' => $roles,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -91,49 +88,57 @@ class UserController extends Controller
 
             DB::commit();
 
-            return Redirect::route('users.index');
+            return back();
         } catch (Throwable $e) {
 
             return $e;
             DB::rollBack();
 
-            return Redirect::route('users.index');
+            return back();
         }
     }
 
-    public function show(User $user)
+    public function show($id)
     {
-        $user->load('roles:id,name');
-        $user['date_added'] = DateService::viewDate($user->created_at);
+        $model = User::find($id);
+
+        $model->load('roles:id,name');
+        $model['date_added'] = DateService::viewDate($model->created_at);
 
         return Inertia::render('User/Show', [
-            'model' => $user,
+            'moduleRoute' => $this->module_route,
+            'model' => $model,
         ]);
     }
 
-    public function edit(User $user)
+    public function edit($id)
     {
-        $user->load('roles:id,name');
+        $model = User::find($id);
+
+        $model->load('roles:id,name');
 
         $roles = Role::select('id', 'name')
             ->orderBy('id')
             ->get();
 
         return Inertia::render('User/Edit', [
-            'model' => $user,
+            'moduleRoute' => $this->module_route,
+            'model' => $model,
             'roles' => $roles,
         ]);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
+        $model = User::find($id);
+
         $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => [
                 'required',
                 'email',
-                Rule::unique('users')->ignore($user),
+                Rule::unique('users')->ignore($model),
             ],
             'role' => [
                 'required',
@@ -145,22 +150,18 @@ class UserController extends Controller
 
         try {
 
-            $user->update($request->except(['role']));
-            $user->syncRoles([$request->role]);
+            $model->update($request->except(['role']));
+            $model->syncRoles([$request->role]);
 
             DB::commit();
 
-            return Redirect::route('users.edit', [
-                'user' => $user->id,
-            ]);
+            return back();
         } catch (Throwable $e) {
 
             return $e;
             DB::rollBack();
 
-            return Redirect::route('users.edit', [
-                'user' => $user->id,
-            ]);
+            return back();
         }
     }
 
