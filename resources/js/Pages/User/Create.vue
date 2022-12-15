@@ -147,8 +147,14 @@
     import Swal from 'sweetalert2'
 
     const props = defineProps({
+        moduleRoute: {
+            type: String,
+            required: true
+        },
         roles: Array,
     });
+
+    const url = '/' + props.moduleRoute
 
     const form = useForm({
         first_name: null,
@@ -159,10 +165,8 @@
         role: null,
     })
 
-    const url = '/users'
-
     function submitForm() {
-        form.post(route('users.store'), {
+        form.post(route(props.moduleRoute + '.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 Swal.fire({
@@ -173,9 +177,6 @@
                 }).then(() => {
                     Inertia.get(url)
                 })
-            },
-            onError: (error) => {
-                // console.log(error)
             },
         })
     }

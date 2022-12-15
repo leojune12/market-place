@@ -2,10 +2,12 @@
     <Head title="User" />
 
     <AuthenticatedLayout>
-        <div class="flex mb-4 justify-end">
+        <div class="flex flex-col md:flex-row mb-4 md:justify-between md:items-center gap-y-4">
+            <h3 class="text-xl font-bold leading-6 text-gray-700">Users</h3>
             <LinkComponent
                 :href="url + '/create'"
                 type="success"
+                class=""
             >
                 <PlusIcon class="block h-5 w-5" aria-hidden="true" />
                 Create
@@ -37,7 +39,7 @@
                 </thead>
                 <tbody class="border">
                     <tr
-                        v-for="item in response.data"
+                        v-for="item in props.response.data"
                         :key="item.id"
                         class="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100"
                     >
@@ -87,13 +89,13 @@
             </table>
         </div>
         <PaginationComponent
-            :totalPages="response.last_page"
-            :perPage="response.per_page"
-            :currentPage="response.current_page"
-            :from="response.from"
-            :to="response.to"
-            :total="response.total"
-            url="/users"
+            :totalPages="props.response.last_page"
+            :perPage="props.response.per_page"
+            :currentPage="props.response.current_page"
+            :from="props.response.from"
+            :to="props.response.to"
+            :total="props.response.total"
+            :url="url"
         />
     </AuthenticatedLayout>
 </template>
@@ -101,20 +103,23 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
     import PaginationComponent from '@/Components/Table/Pagination.vue'
-    import { Head, Link } from '@inertiajs/inertia-vue3'
+    import { Head, useForm, Link } from '@inertiajs/inertia-vue3'
     import { EyeIcon, PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/vue/24/outline'
     import Swal from 'sweetalert2'
-    import { useForm } from '@inertiajs/inertia-vue3'
     import LinkComponent from '@/Components/LinkComponent.vue';
 
-    const url = '/users'
-
-    defineProps({
+    const props = defineProps({
+        moduleRoute: {
+            type: String,
+            required: true
+        },
         response: Object,
     })
 
+    const url = '/' + props.moduleRoute
+
     const form = useForm({
-        id_array: [],
+        //
     })
 
     function confirmDelete(id) {
@@ -143,7 +148,7 @@
                 id_array: id_array,
             }))
             .delete(
-            route('users.destroy', id),
+            route(props.moduleRoute + '.destroy', id),
             {
                 preserveScroll: true,
                 onSuccess: () => {
@@ -157,7 +162,12 @@
                     })
                 },
                 onError: (error) => {
-                    // console.log(error)
+                    Swal.fire({
+                        title: 'Something went wrong',
+                        text: "Please refresh the page.",
+                        icon: 'error',
+                        confirmButtonColor: '#d33',
+                    })
                 },
             }
         )

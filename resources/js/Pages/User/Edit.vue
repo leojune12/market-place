@@ -113,12 +113,16 @@
     import LinkComponent from '@/Components/LinkComponent.vue';
     import Swal from 'sweetalert2'
 
-    const url = '/users'
-
     const props = defineProps({
+        moduleRoute: {
+            type: String,
+            required: true
+        },
         model: Object,
         roles: Array,
     });
+
+    const url = '/' + props.moduleRoute
 
     const form = useForm({
         first_name: props.model.first_name,
@@ -128,7 +132,7 @@
     })
 
     function submitForm() {
-        form.patch(route('users.update', props.model.id), {
+        form.patch(route(props.moduleRoute + '.update', props.model.id), {
             preserveScroll: true,
             onSuccess: () => {
                 Swal.fire({
@@ -139,9 +143,6 @@
                 }).then(() => {
                     Inertia.get(url)
                 })
-            },
-            onError: (error) => {
-                // console.log(error)
             },
         })
     }

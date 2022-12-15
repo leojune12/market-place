@@ -11,23 +11,23 @@
                 <dl>
                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">First name</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ model.first_name }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ props.model.first_name }}</dd>
                     </div>
                     <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Last name</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ model.last_name }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ props.model.last_name }}</dd>
                     </div>
                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Email address</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ model.email }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ props.model.email }}</dd>
                     </div>
                     <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Role</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 capitalize ">{{ model.roles[0].name }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 capitalize ">{{ props.model.roles[0].name }}</dd>
                     </div>
                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">Created At</dt>
-                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ model.date_added }}</dd>
+                        <dd class="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{{ props.model.date_added }}</dd>
                     </div>
                 </dl>
             </div>
@@ -39,7 +39,7 @@
                     Back
                 </LinkComponent>
                 <LinkComponent
-                :href="url + '/' + model.id + '/edit'"
+                :href="url + '/' + props.model.id + '/edit'"
                     type="primary"
                 >
                     Edit
@@ -54,10 +54,13 @@
     import { Head } from '@inertiajs/inertia-vue3'
     import LinkComponent from '@/Components/LinkComponent.vue';
 
-    const url = '/users'
-
-    defineProps({
+    const props = defineProps({
+        moduleRoute: {
+            type: String,
+            required: true
+        },
         model: Object,
-        roles: Array,
     })
+
+    const url = '/' + props.moduleRoute
 </script>
