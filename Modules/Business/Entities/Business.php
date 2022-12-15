@@ -2,7 +2,7 @@
 
 namespace Modules\Business\Entities;
 
-use Modules\Users\Entities\User;
+use Modules\User\Entities\User;
 use Modules\Address\Entities\City;
 use Modules\Address\Entities\Region;
 use Modules\Product\Entities\Product;
