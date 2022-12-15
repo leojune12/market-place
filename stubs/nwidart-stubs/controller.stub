@@ -2,87 +2,137 @@
 
 namespace $CLASS_NAMESPACE$;
 
-use Illuminate\Contracts\Support\Renderable;
+use Throwable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+use App\Services\DateService;
 
 class $CLASS$ extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+    public $module_route = 'module_route';
+
+    public function index(Request $request)
     {
         return Inertia::render('$MODULE$/Index', [
-            // '' => ,
+            'moduleRoute' => $this->module_route,
+            'response' => $this->getData($request),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
+    private function getData($request)
+    {
+        $query = DB::table('table');
+
+        $query->whereNull('deleted_at');
+
+        $query->orderBy($request->orderBy ?? 'id', $request->orderType ?? 'DESC');
+
+        $query->select(
+            'id',
+            'name',
+        );
+
+        return $query->paginate($request->perPage ?? 10);
+    }
+
     public function create()
     {
         return Inertia::render('$MODULE$/Create', [
+            'moduleRoute' => $this->module_route,
             // '' => ,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $model = Model::create($request->all());
+
+            DB::commit();
+
+            return back();
+        } catch (Throwable $e) {
+
+            return $e;
+            DB::rollBack();
+
+            return back();
+        }
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function show($id)
     {
+        $model = Model::find($id);
+
+        $model['date_added'] = DateService::viewDate($model->created_at);
+
         return Inertia::render('$MODULE$/Show', [
-            // '' => ,
+            'moduleRoute' => $this->module_route,
+            'model' => $model,
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function edit($id)
     {
+        $model = Model::find($id);
+
         return Inertia::render('$MODULE$/Edit', [
-            // '' => ,
+            'moduleRoute' => $this->module_route,
+            'model' => $model,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
     public function update(Request $request, $id)
     {
-        //
+        $model = Model::find($id);
+
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $model->update($request->all());
+
+            DB::commit();
+
+            return back();
+        } catch (Throwable $e) {
+
+            return $e;
+            DB::rollBack();
+
+            return back();
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        if(!empty($request->id_array)) {
+
+            DB::beginTransaction();
+
+            try {
+
+                Model::destroy($request->id_array);
+                DB::commit();
+                return back();
+            } catch (Throwable $e) {
+
+                DB::rollBack();
+                return back();
+            }
+        }
     }
 }
