@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Address\Services\AddressService;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['role:Admin']], function () {
     Route::resource('address', AddressController::class);
+});
+
+Route::group(['middleware' => ['auth']], function () {
+
+    Route::get('address/get-barangays-per-city-muniicpality/{city_code}', function($city_code) {
+
+        return AddressService::getBarangaysPerCity($city_code);
+    });
+
+    Route::get('address/get-cities-municipalities-per-province/{province_code}', function($province_code) {
+
+        return AddressService::getCityPerProvince($province_code);
+    });
 });
