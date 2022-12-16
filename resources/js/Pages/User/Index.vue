@@ -1,9 +1,11 @@
 <template>
-    <Head title="User" />
+    <Head :title="props.module" />
 
     <AuthenticatedLayout>
         <div class="flex flex-col md:flex-row mb-4 md:justify-between md:items-center gap-y-4">
-            <h3 class="text-xl font-bold leading-6 text-gray-700">Users</h3>
+            <h3 class="text-xl font-bold leading-6 text-gray-700">
+                {{ props.module }}
+            </h3>
             <LinkComponent
                 :href="url + '/create'"
                 type="success"
@@ -61,14 +63,14 @@
                         <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
                             <div class="flex gap-2">
                                 <Link
-                                    :href="'/users/' + item.id"
+                                    :href="url + '/' + item.id"
                                     class="text-green-500 hover:text-green-600 transition duration-300 ease-in-out"
                                     title="View"
                                 >
                                     <EyeIcon class="block h-5 w-5" aria-hidden="true" />
                                 </Link>
                                 <Link
-                                    :href="'/users/' + item.id + '/edit'"
+                                    :href="url + '/' + item.id + '/edit'"
                                     class="text-blue-600 hover:text-blue-700 transition duration-300 ease-in-out"
                                     title="Edit"
                                 >
@@ -109,6 +111,10 @@
     import LinkComponent from '@/Components/LinkComponent.vue';
 
     const props = defineProps({
+        module: {
+            type: String,
+            required: true
+        },
         moduleRoute: {
             type: String,
             required: true

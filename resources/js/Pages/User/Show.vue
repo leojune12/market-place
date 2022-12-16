@@ -1,11 +1,11 @@
 <template>
-    <Head title="User" />
+    <Head :title="props.module" />
 
     <AuthenticatedLayout>
         <div class="overflow-hidden bg-white shadow sm:rounded-lg mb-5">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg font-medium leading-6 text-gray-900">User Information</h3>
-                <p class="mt-1 max-w-2xl text-sm text-gray-500">Personal details and application.</p>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">User details and application.</p>
             </div>
             <div class="border-t border-gray-200">
                 <dl>
@@ -55,6 +55,10 @@
     import LinkComponent from '@/Components/LinkComponent.vue';
 
     const props = defineProps({
+        module: {
+            type: String,
+            required: true
+        },
         moduleRoute: {
             type: String,
             required: true
