@@ -12,14 +12,16 @@ use Modules\Category\Entities\Category;
 
 class CategoryController extends Controller
 {
-    public $module_route = 'categories';
+    public $response_array = [
+        "module" => "Categories",
+        "moduleRoute" => "categories"
+    ];
 
     public function index(Request $request)
     {
-        return Inertia::render('Category/Index', [
-            'moduleRoute' => $this->module_route,
-            'response' => $this->getData($request),
-        ]);
+        $this->response_array["response"] = $this->getData($request);
+
+        return Inertia::render('Category/Index', $this->response_array);
     }
 
     private function getData($request)
@@ -40,10 +42,7 @@ class CategoryController extends Controller
 
     public function create()
     {
-        return Inertia::render('Category/Create', [
-            'moduleRoute' => $this->module_route,
-            // '' => ,
-        ]);
+        return Inertia::render('Category/Create', $this->response_array);
     }
 
     public function store(Request $request)
@@ -76,20 +75,18 @@ class CategoryController extends Controller
 
         $model['date_added'] = DateService::viewDate($model->created_at);
 
-        return Inertia::render('Category/Show', [
-            'moduleRoute' => $this->module_route,
-            'model' => $model,
-        ]);
+        $this->response_array["model"] = $model;
+
+        return Inertia::render('Category/Show', $this->response_array);
     }
 
     public function edit($id)
     {
         $model = Category::find($id);
 
-        return Inertia::render('Category/Edit', [
-            'moduleRoute' => $this->module_route,
-            'model' => $model,
-        ]);
+        $this->response_array["model"] = $model;
+
+        return Inertia::render('Category/Edit', $this->response_array);
     }
 
     public function update(Request $request, $id)

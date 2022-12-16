@@ -15,14 +15,16 @@ use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
-    public $module_route = 'users';
+    public $response_array = [
+        "module" => "Users",
+        "moduleRoute" => "users"
+    ];
 
     public function index(Request $request)
     {
-        return Inertia::render('User/Index', [
-            'moduleRoute' => $this->module_route,
-            'response' => $this->getData($request),
-        ]);
+        $this->response_array["response"] = $this->getData($request);
+
+        return Inertia::render('User/Index', $this->response_array);
     }
 
     private function getData($request)
@@ -55,10 +57,9 @@ class UserController extends Controller
             ->orderBy('id')
             ->get();
 
-        return Inertia::render('User/Create', [
-            'moduleRoute' => $this->module_route,
-            'roles' => $roles,
-        ]);
+        $this->response_array["roles"] = $roles;
+
+        return Inertia::render('User/Create', $this->response_array);
     }
 
     public function store(Request $request)
@@ -105,10 +106,9 @@ class UserController extends Controller
         $model->load('roles:id,name');
         $model['date_added'] = DateService::viewDate($model->created_at);
 
-        return Inertia::render('User/Show', [
-            'moduleRoute' => $this->module_route,
-            'model' => $model,
-        ]);
+        $this->response_array["model"] = $model;
+
+        return Inertia::render('User/Show', $this->response_array);
     }
 
     public function edit($id)
@@ -121,11 +121,10 @@ class UserController extends Controller
             ->orderBy('id')
             ->get();
 
-        return Inertia::render('User/Edit', [
-            'moduleRoute' => $this->module_route,
-            'model' => $model,
-            'roles' => $roles,
-        ]);
+        $this->response_array["model"] = $model;
+        $this->response_array["roles"] = $roles;
+
+        return Inertia::render('User/Edit', $this->response_array);
     }
 
     public function update(Request $request, $id)
