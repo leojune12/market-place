@@ -1,5 +1,5 @@
 <template>
-    <Head title="User" />
+    <Head :title="props.module" />
 
     <AuthenticatedLayout>
         <div class="overflow-hidden bg-white shadow sm:rounded-lg mb-5 p-4 sm:p-8">
@@ -60,6 +60,10 @@
     import Swal from 'sweetalert2'
 
     const props = defineProps({
+        module: {
+            type: String,
+            required: true
+        },
         moduleRoute: {
             type: String,
             required: true

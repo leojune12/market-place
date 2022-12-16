@@ -1,9 +1,11 @@
 <template>
-    <Head title="User" />
+    <Head :title="props.module" />
 
     <AuthenticatedLayout>
         <div class="flex flex-col md:flex-row mb-4 md:justify-between md:items-center gap-y-4">
-            <h3 class="text-xl font-bold leading-6 text-gray-700">Categories</h3>
+            <h3 class="text-xl font-bold leading-6 text-gray-700">
+                {{ props.module }}
+            </h3>
             <LinkComponent
                 :href="url + '/create'"
                 type="success"
@@ -92,6 +94,10 @@
     import LinkComponent from '@/Components/LinkComponent.vue';
 
     const props = defineProps({
+        module: {
+            type: String,
+            required: true
+        },
         moduleRoute: {
             type: String,
             required: true
