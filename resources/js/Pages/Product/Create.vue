@@ -5,10 +5,10 @@
         <div class="bg-white shadow sm:rounded-lg mb-5 p-4 sm:p-8">
             <div class="md:grid md:grid-cols-2">
                 <header>
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Category Information</h2>
+                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Product Information</h2>
 
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        Create category's profile information and email address.
+                        Create product's information.
                     </p>
                 </header>
             </div>
@@ -30,6 +30,46 @@
                             />
 
                             <InputError class="mt-2" :message="form.errors.name" />
+                        </div>
+                        <div>
+                            <InputLabel for="business" value="Business" />
+                            <ListBox
+                                id="business"
+                                :items="businesses"
+                                v-on:update:model-value="form.business_id = $event.id"
+                            />
+                            <InputError class="mt-2" :message="form.errors.business_id" />
+                        </div>
+                    </div>
+                    <div class="md:grid md:grid-cols-3 md:gap-x-6 space-y-6 md:space-y-0">
+                        <div class="md:col-span-2">
+                            <InputLabel for="name" value="Description" />
+
+                            <TextareaInput
+                                id="description"
+                                class="mt-1 block w-full"
+                                v-model="form.description"
+                                autocomplete="description"
+                                rows="6"
+                            />
+
+                            <InputError class="mt-2" :message="form.errors.description" />
+                        </div>
+                    </div>
+                    <div class="md:grid md:grid-cols-3 md:gap-x-6 space-y-6 md:space-y-0">
+                        <div>
+                            <InputLabel for="price" value="Price" />
+
+                            <TextInput
+                                id="price"
+                                type="text"
+                                class="mt-1 block w-full"
+                                v-model="form.price"
+                                required
+                                autocomplete="price"
+                            />
+
+                            <InputError class="mt-2" :message="form.errors.price" />
                         </div>
                     </div>
                     <div class="flex flex-col md:flex-row gap-4">
@@ -59,6 +99,8 @@
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import LinkComponent from '@/Components/LinkComponent.vue';
     import Swal from 'sweetalert2'
+    import ListBox from '@/Components/ListBox.vue'
+    import TextareaInput from '@/Components/TextareaInput.vue'
 
     const props = defineProps({
         module: {
@@ -69,12 +111,18 @@
             type: String,
             required: true
         },
+        businesses: {
+            type: Array,
+        }
     });
 
     const url = '/' + props.moduleRoute
 
     const form = useForm({
         name: null,
+        business_id: null,
+        description: null,
+        price: null,
     })
 
     function submitForm() {

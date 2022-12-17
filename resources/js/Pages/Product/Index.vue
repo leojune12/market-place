@@ -26,6 +26,9 @@
                             Name
                         </th>
                         <th class="py-3 px-6 text-left">
+                            Business
+                        </th>
+                        <th class="py-3 px-6 text-left">
                             Actions
                         </th>
                     </tr>
@@ -41,6 +44,9 @@
                         </td>
                         <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
                             {{ item.name }}
+                        </td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
+                            {{ item.business_name }}
                         </td>
                         <td class="text-sm text-gray-900 font-light px-6 py-3 whitespace-nowrap">
                             <div class="flex gap-2">

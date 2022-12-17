@@ -4,11 +4,13 @@ namespace Modules\Product\Http\Controllers;
 
 use Throwable;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\DateService;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Product\Entities\Product;
+use Modules\Business\Entities\Business;
 
 class ProductController extends Controller
 {
@@ -28,13 +30,16 @@ class ProductController extends Controller
     {
         $query = DB::table('products');
 
-        $query->whereNull('deleted_at');
+        $query->whereNull('products.deleted_at');
+
+        $query->join('businesses', 'businesses.id', '=', 'products.business_id');
 
         $query->orderBy($request->orderBy ?? 'id', $request->orderType ?? 'DESC');
 
         $query->select(
-            'id',
-            'name',
+            'products.id',
+            'products.name',
+            'businesses.name as business_name',
         );
 
         return $query->paginate($request->perPage ?? 10);
@@ -42,6 +47,12 @@ class ProductController extends Controller
 
     public function create()
     {
+        $businesses = Business::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+
+        $this->response_array['businesses'] = $businesses;
+
         return Inertia::render('Product/Create', $this->response_array);
     }
 
@@ -49,11 +60,18 @@ class ProductController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'business_id' => 'required',
+            'description' => 'nullable',
+            'price' => 'required',
         ]);
 
         DB::beginTransaction();
 
         try {
+
+            $request->merge([
+                'slug' => Str::slug($request->name),
+            ]);
 
             $model = Product::create($request->all());
 
@@ -72,6 +90,8 @@ class ProductController extends Controller
     public function show($id)
     {
         $model = Product::find($id);
+
+        $model->load('business:id,name');
 
         $model['date_added'] = DateService::viewDate($model->created_at);
 
@@ -95,11 +115,17 @@ class ProductController extends Controller
 
         $request->validate([
             'name' => 'required',
+            'description' => 'nullable',
+            'price' => 'required',
         ]);
 
         DB::beginTransaction();
 
         try {
+
+            $request->merge([
+                'slug' => Str::slug($request->name),
+            ]);
 
             $model->update($request->all());
 

@@ -31,7 +31,7 @@
                     </div>
                     <div class="md:grid md:grid-cols-2 md:gap-x-6 space-y-6 md:space-y-0">
                         <div class="md:col-span-2">
-                            <InputLabel for="name" value="Description" />
+                            <InputLabel for="description" value="Description" />
 
                             <TextareaInput
                                 id="description"
@@ -41,7 +41,7 @@
                                 rows="6"
                             />
 
-                            <InputError class="mt-2" :message="form.errors.name" />
+                            <InputError class="mt-2" :message="form.errors.description" />
                         </div>
                     </div>
                 </div>
