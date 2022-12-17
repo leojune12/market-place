@@ -3,14 +3,19 @@
 namespace Modules\Subcategory\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Business\Entities\Business;
+use Modules\Category\Entities\Category;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Subcategory extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'name',
+        'category_id',
+    ];
 
     // protected $guarded = [];
 
