@@ -2,87 +2,169 @@
 
 namespace Modules\Business\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Throwable;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Services\DateService;
+use Illuminate\Validation\Rule;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Address\Entities\City;
+use Modules\Address\Entities\Barangay;
+use Modules\Address\Entities\Province;
+use Modules\Business\Entities\Business;
 
 class BusinessController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+    public $response_array = [
+        "module" => "Business",
+        "moduleRoute" => "businesses"
+    ];
+
+
+    public function index(Request $request)
     {
-        return Inertia::render('Business/Index', [
-            // '' => ,
-        ]);
+        $this->response_array["response"] = $this->getData($request);
+
+        return Inertia::render('Business/Index', $this->response_array);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
+    private function getData($request)
+    {
+        $query = DB::table('businesses');
+
+        $query->whereNull('deleted_at');
+
+        $query->orderBy($request->orderBy ?? 'id', $request->orderType ?? 'DESC');
+
+        $query->select(
+            'id',
+            'name',
+            'full_address',
+        );
+
+        return $query->paginate($request->perPage ?? 10);
+    }
+
     public function create()
     {
-        return Inertia::render('Business/Create', [
-            // '' => ,
-        ]);
+        return Inertia::render('Business/Create', $this->response_array);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required',
+            'name' => 'required',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('businesses'),
+            ],
+            'description' =>  'nullable',
+            'contact_number' =>  'required',
+            'website' =>  'nullable',
+            'facebook_link' =>  'nullable',
+            'map_location' =>  'nullable',
+            'street' =>  'nullable',
+            'barangay_id' =>  'required',
+            'city_id' =>  'required',
+            'province_id' =>  'required',
+            'region_id' =>  'required',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $barangay = Barangay::where('brgyCode', $request->barangay_id)->first();
+            $city = City::where('citymunCode', $request->city_id)->first();
+            $province = Province::where('provCode', $request->province_id)->first();
+
+            $street = $request->filled('street') ? $request->street . ', ' : '';
+
+            $request->merge([
+                'full_address' => $street . $barangay->brgyDesc . ', ' . ucwords(Str::lower($city->citymunDesc)) . ', ' . $province->provDesc,
+                'slug' => Str::slug($request->name),
+            ]);
+
+            $model = Business::create($request->all());
+
+            DB::commit();
+
+            return back();
+        } catch (Throwable $e) {
+
+            DB::rollBack();
+
+            return $e;
+            // return back();
+        }
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function show($id)
     {
-        return Inertia::render('Business/Show', [
-            // '' => ,
-        ]);
+        $model = Business::find($id);
+        $model->load('user');
+
+        $model['date_added'] = DateService::viewDate($model->created_at);
+
+        $this->response_array["model"] = $model;
+
+        return Inertia::render('Business/Show', $this->response_array);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function edit($id)
     {
-        return Inertia::render('Business/Edit', [
-            // '' => ,
-        ]);
+        // $model = Business::find($id);
+
+        // $this->response_array["model"] = $model;
+
+        // return Inertia::render('Business/Edit', $this->response_array);
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
     public function update(Request $request, $id)
     {
-        //
+        $model = Business::find($id);
+
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+
+            $model->update($request->all());
+
+            DB::commit();
+
+            return back();
+        } catch (Throwable $e) {
+
+            DB::rollBack();
+
+            return $e;
+            // return back();
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        if(!empty($request->id_array)) {
+
+            DB::beginTransaction();
+
+            try {
+
+                Business::destroy($request->id_array);
+                DB::commit();
+                return back();
+            } catch (Throwable $e) {
+
+                DB::rollBack();
+                return back();
+            }
+        }
     }
 }
