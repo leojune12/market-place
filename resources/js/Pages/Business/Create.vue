@@ -3,7 +3,7 @@
 
     <AuthenticatedLayout>
 
-        <form @submit.prevent="submitForm()" class="overflow-hidden bg-white shadow sm:rounded-lg mb-5 p-4 sm:p-8 md:col-span-2 space-y-6">
+        <form @submit.prevent="submitForm()" class="bg-white shadow sm:rounded-lg mb-5 p-4 sm:p-8 md:col-span-2 space-y-6">
             <div class="md:grid md:grid-cols-3 md:gap-x-6 md:space-y-0 space-y-6">
                 <div class="md:col-span-1">
                     <div class="">

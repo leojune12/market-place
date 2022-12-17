@@ -2,7 +2,7 @@
     <Head :title="props.module" />
 
     <AuthenticatedLayout>
-        <div class="overflow-hidden bg-white shadow sm:rounded-lg mb-5 p-4 sm:p-8">
+        <div class="bg-white shadow sm:rounded-lg mb-5 p-4 sm:p-8">
             <div class="md:grid md:grid-cols-2">
                 <header>
                     <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">User Information</h2>

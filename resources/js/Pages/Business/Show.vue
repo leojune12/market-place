@@ -2,7 +2,7 @@
     <Head :title="props.module" />
 
     <AuthenticatedLayout>
-        <div class="overflow-hidden bg-white shadow sm:rounded-lg mb-5">
+        <div class="bg-white shadow sm:rounded-lg mb-5">
             <div class="px-4 py-5 sm:px-6">
                 <h3 class="text-lg font-medium leading-6 text-gray-900">Business Information</h3>
                 <p class="mt-1 max-w-2xl text-sm text-gray-500">Business details and application.</p>
