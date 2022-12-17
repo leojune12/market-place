@@ -8,17 +8,20 @@ use Illuminate\Routing\Controller;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Services\DateService;
+use Modules\$MODULE$\Entities\$MODULE$;
 
 class $CLASS$ extends Controller
 {
-    public $module_route = 'module_route';
+    public $response_array = [
+        "module" => "$MODULE$",
+        "moduleRoute" => "$MODULE$"
+    ];
 
     public function index(Request $request)
     {
-        return Inertia::render('$MODULE$/Index', [
-            'moduleRoute' => $this->module_route,
-            'response' => $this->getData($request),
-        ]);
+        $this->response_array["response"] = $this->getData($request);
+
+        return Inertia::render('$MODULE$/Index', $this->response_array);
     }
 
     private function getData($request)
@@ -39,10 +42,7 @@ class $CLASS$ extends Controller
 
     public function create()
     {
-        return Inertia::render('$MODULE$/Create', [
-            'moduleRoute' => $this->module_route,
-            // '' => ,
-        ]);
+        return Inertia::render('$MODULE$/Create', $this->response_array);
     }
 
     public function store(Request $request)
@@ -55,7 +55,7 @@ class $CLASS$ extends Controller
 
         try {
 
-            $model = Model::create($request->all());
+            $model = $MODULE$::create($request->all());
 
             DB::commit();
 
@@ -71,29 +71,27 @@ class $CLASS$ extends Controller
 
     public function show($id)
     {
-        $model = Model::find($id);
+        $model = $MODULE$::find($id);
 
         $model['date_added'] = DateService::viewDate($model->created_at);
 
-        return Inertia::render('$MODULE$/Show', [
-            'moduleRoute' => $this->module_route,
-            'model' => $model,
-        ]);
+        $this->response_array["model"] = $model;
+
+        return Inertia::render('$MODULE$/Show', $this->response_array);
     }
 
     public function edit($id)
     {
-        $model = Model::find($id);
+        $model = $MODULE$::find($id);
 
-        return Inertia::render('$MODULE$/Edit', [
-            'moduleRoute' => $this->module_route,
-            'model' => $model,
-        ]);
+        $this->response_array["model"] = $model;
+
+        return Inertia::render('$MODULE$/Edit', $this->response_array);
     }
 
     public function update(Request $request, $id)
     {
-        $model = Model::find($id);
+        $model = $MODULE$::find($id);
 
         $request->validate([
             'name' => 'required',
@@ -125,7 +123,7 @@ class $CLASS$ extends Controller
 
             try {
 
-                Model::destroy($request->id_array);
+                $MODULE$::destroy($request->id_array);
                 DB::commit();
                 return back();
             } catch (Throwable $e) {
