@@ -139,7 +139,7 @@
             confirmButtonText: 'Delete'
         }).then((result) => {
             if (result.isConfirmed) {
-                this.deleteItem(id)
+                deleteItem(id)
             }
         })
     }
