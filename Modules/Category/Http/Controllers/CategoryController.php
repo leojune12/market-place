@@ -62,10 +62,10 @@ class CategoryController extends Controller
             return back();
         } catch (Throwable $e) {
 
-            return $e;
             DB::rollBack();
 
-            return back();
+            return $e;
+            // return back();
         }
     }
 
@@ -108,10 +108,10 @@ class CategoryController extends Controller
             return back();
         } catch (Throwable $e) {
 
-            return $e;
             DB::rollBack();
 
-            return back();
+            return $e;
+            // return back();
         }
     }
 
