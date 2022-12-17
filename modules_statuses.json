@@ -4,5 +4,6 @@
     "Subcategory": true,
     "Business": true,
     "Address": true,
-    "Product": true
+    "Product": true,
+    "Service": true
 }
