@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Modules\User\Entities\User;
 use Modules\Address\Entities\City;
+use Modules\Product\Entities\Product;
 use Modules\Address\Entities\Barangay;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Business\Entities\Business;
@@ -61,9 +62,9 @@ class UserDatabaseSeeder extends Seeder
                     $business->subcategories()->attach(Category::find($category_id)->subcategories->random(3));
 
                     // Add Product
-                    // Product::factory(3)->create([
-                    //     'business_id' => $business->id
-                    // ]);
+                    Product::factory(3)->create([
+                        'business_id' => $business->id
+                    ]);
 
                     // Add Service
                     // Service::factory(1)->create([
