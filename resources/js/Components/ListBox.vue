@@ -4,9 +4,9 @@
         v-model="selected"
         @update:modelValue="value => emit('update:modelValue', value)"
     >
-        <ListboxLabel class="block text-sm font-medium text-gray-700">
+        <!-- <ListboxLabel class="block text-sm font-medium text-gray-700">
             {{ props.label }}
-        </ListboxLabel>
+        </ListboxLabel> -->
         <div class="relative mt-1">
             <ListboxButton class="relative w-full cursor-default rounded-md border border-gray-300 bg-white h-10 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
                 <span class="flex items-center">
@@ -47,10 +47,10 @@
             required: true,
             default: [],
         },
-        label: {
-            type: String,
-            default: '',
-        }
+        // label: {
+        //     type: String,
+        //     default: '',
+        // }
     })
 
     const emit = defineEmits(['update:modelValue'])
