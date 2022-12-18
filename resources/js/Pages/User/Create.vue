@@ -69,8 +69,8 @@
                             <ListBox
                                 id="role"
                                 :items="props.roles"
-                                v-on:update:model-value="selectedRole = $event.id"
-                                :model-value="selectedRole"
+                                v-on:update:model-value="form.role_id = $event.id"
+                                :model-value="form.role_id"
                             />
 
                             <InputError class="mt-2" :message="form.errors.role_id" />
@@ -151,15 +151,13 @@
 
     const url = '/' + props.moduleRoute
 
-    const selectedRole = ref(null)
-
     const form = useForm({
         first_name: null,
         last_name: null,
         email: null,
         password: null,
         password_confirmation: null,
-        role_id: selectedRole,
+        role_id: ref(null),
     })
 
     function submitForm() {
