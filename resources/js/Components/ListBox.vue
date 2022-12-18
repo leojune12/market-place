@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue'
+    import { ref, computed, watch } from 'vue'
     import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
     import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
@@ -51,9 +51,13 @@
             default: [],
         },
         modelValue: null,
+        resetIndex: {
+            type: Boolean,
+            default: false,
+        }
     })
 
-    const emit = defineEmits(['update:modelValue'])
+    const emit = defineEmits(['update:modelValue', 'update:resetIndex'])
 
     const initalItem = [
         {
@@ -72,4 +76,9 @@
 
         selected.value = selectedIndex < 1 ? listboxItems.value[0] : listboxItems.value[selectedIndex]
     }
+
+    watch(() => _.cloneDeep(props.resetIndex), (newValue, oldValue) => {
+        selected.value = listboxItems.value[0]
+        emit('update:resetIndex', false)
+    })
 </script>

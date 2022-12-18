@@ -84,7 +84,7 @@ class BusinessController extends Controller
             $street = $request->filled('street') ? $request->street . ', ' : '';
 
             $request->merge([
-                'full_address' => $street . $barangay->brgyDesc . ', ' . ucwords(Str::lower($city->citymunDesc)) . ', ' . $province->provDesc,
+                'full_address' => $street . $barangay->brgyDesc . ', ' . ucwords(Str::lower($city->citymunDesc)) . ', ' . ucwords(strtolower($province->provDesc)),
                 'slug' => Str::slug($request->name),
             ]);
 

@@ -53,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="md:grid md:grid-cols-3 md:gap-x-6 space-y-6">
+            <div class="md:grid md:grid-cols-3 md:gap-x-6 space-y-6 md:space-y-0">
                 <div class="md:col-span-1">
                     <div class="">
                         <h3 class="text-lg font-medium leading-6 text-gray-900">Address Information</h3>
@@ -69,6 +69,7 @@
                                 id="city"
                                 :items="citiesMunicipalities"
                                 v-on:update:model-value="form.city_id = $event.id"
+                                :model-value="form.city_id"
                             />
                             <InputError class="mt-2" :message="form.errors.city_id" />
                         </div>
@@ -79,6 +80,9 @@
                                 id="barangay"
                                 :items="barangays"
                                 v-on:update:model-value="form.barangay_id = $event.id"
+                                :model-value="form.barangay_id"
+                                :reset-index="resetBarangayIndex"
+                                v-on:update:reset-index="resetBarangayIndex = $event"
                             />
                             <InputError class="mt-2" :message="form.errors.barangay_id" />
                         </div>
@@ -260,6 +264,8 @@
         region_id: 6,
     })
 
+    const resetBarangayIndex = ref(false)
+
     onMounted(() => {
         getCitiesMunicipalities()
     })
@@ -267,6 +273,8 @@
     watch(() => _.cloneDeep(form.city_id), (newValue, oldValue) => {
 
         getBarangays(form.city_id)
+        resetBarangayIndex.value = true
+        form.barangay_id = null
     })
 
     function submitForm() {
