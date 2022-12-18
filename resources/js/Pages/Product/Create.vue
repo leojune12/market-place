@@ -24,7 +24,7 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 v-model="form.name"
-                                required
+
                                 autofocus
                                 autocomplete="name"
                             />
@@ -37,6 +37,7 @@
                                 id="business"
                                 :items="businesses"
                                 v-on:update:model-value="form.business_id = $event.id"
+                                :model-value="form.business_id"
                             />
                             <InputError class="mt-2" :message="form.errors.business_id" />
                         </div>
