@@ -99,6 +99,12 @@ class ServiceController extends Controller
 
         $this->response_array["model"] = $model;
 
+        $businesses = Business::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+
+        $this->response_array['businesses'] = $businesses;
+
         return Inertia::render('Service/Edit', $this->response_array);
     }
 
