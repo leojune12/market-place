@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-    import { ref, watch } from 'vue'
+    import { ref, computed } from 'vue'
     import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
     import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
@@ -62,7 +62,7 @@
         }
     ]
 
-    const listboxItems = ref([...initalItem, ...props.items])
+    const listboxItems = computed(() => [...initalItem, ...props.items])
 
     let selected = ref(listboxItems.value[0])
 
