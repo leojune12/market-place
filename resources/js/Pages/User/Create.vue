@@ -66,25 +66,14 @@
                         <div>
                             <InputLabel for="role" value="Role" />
 
-                            <select
-                                v-model="form.role"
-                                id="country"
-                                name="country"
-                                autocomplete="country-name"
-                                class="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm h-10 capitalize"
-                            >
-                                <option value="null">Select Role</option>
-                                <option
-                                    v-for="role in props.roles"
-                                    :key="role.id"
-                                    :value="role.name"
-                                    class="capitalize"
-                                >
-                                    {{ role.name }}
-                                </option>
-                            </select>
+                            <ListBox
+                                id="role"
+                                :items="props.roles"
+                                v-on:update:model-value="selectedRole = $event.id"
+                                :model-value="selectedRole"
+                            />
 
-                            <InputError class="mt-2" :message="form.errors.role" />
+                            <InputError class="mt-2" :message="form.errors.role_id" />
                         </div>
                     </div>
                     <div class="md:grid md:grid-cols-3 md:gap-x-6 space-y-6 md:space-y-0">
@@ -145,6 +134,8 @@
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import LinkComponent from '@/Components/LinkComponent.vue';
     import Swal from 'sweetalert2'
+    import ListBox from '@/Components/ListBox.vue'
+    import { ref } from 'vue'
 
     const props = defineProps({
         module: {
@@ -160,13 +151,15 @@
 
     const url = '/' + props.moduleRoute
 
+    const selectedRole = ref(null)
+
     const form = useForm({
         first_name: null,
         last_name: null,
         email: null,
         password: null,
         password_confirmation: null,
-        role: null,
+        role_id: selectedRole,
     })
 
     function submitForm() {

@@ -73,9 +73,9 @@ class UserController extends Controller
                 Rule::unique('users'),
             ],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'role' => [
+            'role_id' => [
                 'required',
-                'exists:roles,name'
+                // 'exists:roles,name'
             ],
         ]);
 
@@ -85,7 +85,11 @@ class UserController extends Controller
 
             $user = User::create($request->except(['role']));
 
-            $user->syncRoles([$request->role]);
+            $role = Role::find($request->role_id);
+
+            if (!!$role) {
+                $user->syncRoles([$role->name]);
+            }
 
             DB::commit();
 
@@ -139,9 +143,9 @@ class UserController extends Controller
                 'email',
                 Rule::unique('users')->ignore($model),
             ],
-            'role' => [
+            'role_id' => [
                 'required',
-                'exists:roles,name'
+                // 'exists:roles,name'
             ],
         ]);
 
@@ -149,8 +153,13 @@ class UserController extends Controller
 
         try {
 
-            $model->update($request->except(['role']));
-            $model->syncRoles([$request->role]);
+            $model->update($request->except(['role_id']));
+
+            $role = Role::find($request->role_id);
+
+            if (!!$role) {
+                $model->syncRoles([$role->name]);
+            }
 
             DB::commit();
 
