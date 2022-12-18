@@ -5,9 +5,9 @@
         <div class="bg-white shadow sm:rounded-lg mb-5 p-4 sm:p-8">
             <div class="md:grid md:grid-cols-2">
                 <header>
-                    <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Product Information</h2>
+                    <h2 class="text-lg font-medium text-gray-900">Product Information</h2>
 
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    <p class="mt-1 text-sm text-gray-600">
                         Create product's information.
                     </p>
                 </header>
